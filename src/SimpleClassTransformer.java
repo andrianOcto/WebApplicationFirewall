@@ -69,13 +69,14 @@ private static Logger myLogger = Logger.getLogger("Class");
                             {
                             try{
                                 for (Rule rule : listRule) {
-                                    
+
                                     method.insertBefore("String method = \""+rule.getMethod()+"\";"
                                                       + "javax.servlet.http.HttpServletResponse resp = (javax.servlet.http.HttpServletResponse) $2;"
                                                       + "if(method.equals(\"all\")){"
                                                       + "String param = \""+rule.getVariable()+"\"; "
                                                       + "boolean cek = true;"
                                                       + "String matcher = \""+rule.getOperator()+"\";"
+                                                      + "if(param.equals(\"all\")){"
                                                       + "java.util.Enumeration enumeration = $1.getParameterNames();"
                                                       + "while (enumeration.hasMoreElements()) {"
                                                       + "String parameterName = (String) enumeration.nextElement();"
@@ -84,11 +85,31 @@ private static Logger myLogger = Logger.getLogger("Class");
                                                       + "if(matcher.equals(\"@beginwith\")){"
                                                       + "if(value.startsWith(\""+rule.getNilai()+"\")){"
                                                       + "resp.sendError(403); return;}}"
+                                                      + "if(matcher.equals(\"@contains\")){"
+                                                      + "if(value.contains(\""+rule.getNilai()+"\")){"
+                                                      + "resp.sendError(403); return;}}"
+                                                      + "if(matcher.equals(\"@endWith\")){"
+                                                      + "if(value.endsWith(\""+rule.getNilai()+"\")){"
+                                                      + "resp.sendError(403); return;}}"
                                                       + "if(matcher.equals(\"@rg\")){"
                                                       + "java.util.regex.Pattern p = java.util.regex.Pattern.compile(\""+rule.getNilai()+"\");"
                                                       + "java.util.regex.Matcher m = p.matcher(value);"
                                                       + "if(m.find()){"
-                                                      + "resp.sendError(403); return;}}}}");
+                                                      + "resp.sendError(403); return;}}}"
+                                                      + "}"
+                                                      + "else{"
+                                                      + "String value = $1.getParameter(param);"
+                                                      + "System.out.println(value);"
+                                                      + "if(value != null){"
+                                                      + "if(matcher.equals(\"@beginwith\")){"
+                                                      + "if(value.startsWith(\""+rule.getNilai()+"\")){"
+                                                      + "resp.sendError(403); return;}}"
+                                                      + "if(matcher.equals(\"@rg\")){"
+                                                      + "java.util.regex.Pattern p = java.util.regex.Pattern.compile(\""+rule.getNilai()+"\");"
+                                                      + "java.util.regex.Matcher m = p.matcher(value);"
+                                                      + "if(m.find()){"
+                                                      + "resp.sendError(403); return;}}}"
+                                                      + "}}");
                                 }
    
                             }
