@@ -17,17 +17,6 @@ public class Example {
     public static void premain(String args, Instrumentation inst) {
         System.out.println("Simple Agent");
         Configuration conf = new Configuration();
-        try
-        {
-        Pattern p = Pattern.compile("'(\\p{Blank})*or(\\p{Blank})*(('.'(\\p{Blank})*=(\\p{Blank})'.))");
-        Matcher m = p.matcher("./././test");
-        boolean b = m.find();
-        System.out.println(b);
-        }
-        catch(Exception e)
-        {
-            e.printStackTrace();
-        }
         
 	RuleReader rd = new RuleReader();
         ArrayList<Rule> rule = rd.getRule();

@@ -119,8 +119,14 @@ public class RuleReader {
                             String nilai = ruleString[3].trim();
                             rule.generateNilai(nilai);
                         }
+                        if(ruleString[4] != null)
+                        {
+                            String log = ruleString[4].trim();
+                            rule.generateLog(log);
+                        }
                         retVal.add(rule);
                     }
+                    
                 }
 
                 line = br.readLine();

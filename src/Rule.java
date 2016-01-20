@@ -23,11 +23,13 @@ public class Rule {
     private boolean block;
     private boolean log;
     
+    
 
     public Rule() {
         message = "";
         negasi  = false; 
         block   = false;
+        errorCode = "403";
     }
     
     public void generateVariable(String text)
@@ -106,6 +108,41 @@ public class Rule {
         System.out.println(nilai);
     }
     
+    public void generateLog(String text)
+    {
+        text = text.trim();
+        String[] logText = text.split(",");
+ 
+        if(logText[0] != null)
+        {
+            if(logText[0].equals("log"))
+                log = true;
+            else 
+                log = false;
+        }
+        if(logText[1] != null)
+        {
+            if(logText[1].equals("block"))
+                block = true;
+            else if(logText[1].startsWith("block:"))
+            {
+                block = true;
+                String[] blockString = logText[1].split(":");
+                if(blockString[1] != null)
+                {
+                    errorCode = blockString[1];
+                }
+            }
+            else
+                block = false;
+        }
+        if(logText[2] != null)
+        {
+            message = logText[2];
+        }
+        System.out.println("generateLog");
+        System.out.println(isLog()+"-"+block+errorCode+"-"+message);
+    }
     
     public void blockParsing(String rule){
         String[] ruleString = rule.split(":");
