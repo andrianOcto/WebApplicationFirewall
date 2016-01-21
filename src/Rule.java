@@ -77,6 +77,30 @@ public class Rule {
                 method   = "cookies";
             }
         }
+        else if(text.equals("REQUEST_METHOD"))
+        {
+            method   = "method";
+        }
+        else if(text.equals("REQUEST_PROTOCOL"))
+        {
+            method   = "protocol";
+        }
+        else if(text.equals("QUERY_STRING"))
+        {
+            method   = "query";
+        }
+        else if(text.equals("REQUEST_URI"))
+        {
+            method   = "uri";
+        }
+        else if(text.equals("PATH_INFO"))
+        {
+            method   = "path";
+        }
+        else if(text.equals("RESPONSE_CONTENT_TYPE"))
+        {
+            method   = "responseContent";
+        }
         
         System.out.println("generateVariable");
         System.out.println(variable + "-" + method+"-"+text);
