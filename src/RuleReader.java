@@ -47,6 +47,7 @@ public class RuleReader {
     
     public ArrayList<Rule> getRule(){
         ArrayList<Rule> retVal = new ArrayList<>();
+        
         String path = Example.class.getProtectionDomain().getCodeSource().getLocation().getPath();
         path = path.replace("testAgent.jar", file);
         System.out.println(path);
@@ -78,16 +79,6 @@ public class RuleReader {
                             else if(bool.equals("off"))
                                 Configuration.logEnable = false;
                         }
-                    }
-                    if(ruleString[0].equals("SecAuditLog"))
-                    {
-                        if(ruleString[1] != null)
-                            Configuration.logLocation  = ruleString[1].trim();
-                    }
-                    if(ruleString[0].equals("SecAuditLog2"))
-                    {
-                        if(ruleString[1]!=null)
-                            Configuration.logLocation2 = ruleString[1].trim();
                     }
                     if(ruleString[0].equals("SecBlackList"))
                     {

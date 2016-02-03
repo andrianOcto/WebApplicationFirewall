@@ -13,8 +13,7 @@ import java.util.ArrayList;
  */
 public final class Configuration {
     public static boolean logEnable;
-    public static String logLocation;
-    public static String logLocation2;
+
     public static ArrayList<String> blackList;
     public static ArrayList<String> whiteList;
     public static ArrayList<String> confList;
@@ -26,8 +25,6 @@ public final class Configuration {
         
         //inisialisasi daftar konfigurasi
         confList.add("SecAuditEngine");
-        confList.add("SecAuditLog");
-        confList.add("SecAuditLog2");
         confList.add("SecBlackList");
         confList.add("SecWhiteList");
     }
