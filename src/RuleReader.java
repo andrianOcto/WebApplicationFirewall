@@ -22,7 +22,7 @@ public class RuleReader {
     private String file;
     private BufferedReader br;
     private ArrayList<String> listRule;
-    
+    private int logIndex;
     public RuleReader() {
         file        = "rule.txt";
         listRule    = new ArrayList<>();
@@ -43,6 +43,7 @@ public class RuleReader {
         listRule.add("RESPONSE_HEADER");
         listRule.add("RESPONSE_PROTOCOL");
         listRule.add("RESPONSE_CONTENT_TYPE");
+        logIndex=0;
     }
     
     public ArrayList<Rule> getRule(){
@@ -107,13 +108,22 @@ public class RuleReader {
                         }
                         if(ruleString[3] != null)
                         {
-                            String nilai = ruleString[3].trim();
+                            logIndex = 4;
+                            String nilai = ruleString[3];
+
+                            for(int i = 4;i<(ruleString.length-1);i++){
+                                nilai = nilai +"#"+ruleString[i];
+                                logIndex++;
+                            }
+                            nilai = nilai.trim();
                             rule.generateNilai(nilai);
                         }
-                        if(ruleString[4] != null)
+                        if(ruleString[logIndex] != null)
                         {
-                            String log = ruleString[4].trim();
+                            String log = ruleString[logIndex].trim();
+                            System.out.println("masuk hahaha "+log);
                             rule.generateLog(log);
+                            
                         }
                         retVal.add(rule);
                     }

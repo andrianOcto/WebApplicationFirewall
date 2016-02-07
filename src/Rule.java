@@ -128,8 +128,7 @@ public class Rule {
         text  = text.trim();
         text  = text.substring(1, text.length()-1);
         nilai = text;
-        System.out.println("generateNilai");
-        System.out.println(nilai);
+       
     }
     
     public void generateLog(String text)
@@ -141,7 +140,7 @@ public class Rule {
         {
             if(logText[0].equals("log"))
                 log = true;
-            else 
+            else if(logText[0].equals("none"))
                 log = false;
         }
         if(logText[1] != null)
@@ -164,6 +163,8 @@ public class Rule {
         {
             message = logText[2];
         }
+         System.out.println("generateNilai");
+        System.out.println(nilai);
         System.out.println("generateLog");
         System.out.println(isLog()+"-"+block+errorCode+"-"+message);
     }
