@@ -81,30 +81,45 @@ public class RuleReader {
                                 Configuration.logEnable = false;
                         }
                     }
-                    if(ruleString[0].equals("SecBlackList"))
-                    {
-                        if(ruleString[1]!=null)
-                            Configuration.blackList.add(ruleString[1].trim());
-                    }
                     if(ruleString[0].equals("SecWhiteList"))
                     {
+                        System.out.println("SecThi");
                         if(ruleString[1]!=null)
                             Configuration.whiteList.add(ruleString[1].trim());
                     }
-                    
+                    if(ruleString[0].equals("SecWhiteListParam"))
+                    {
+                        
+                        if(ruleString[1]!=null)
+                            Configuration.whiteListParam.add(ruleString[1].trim());
+                    }
                     //cek Rule List
                     if(ruleString[0].equals("SecRule"))
                     {
-                        Rule rule = new Rule();
+                        ArrayList<Rule> ruleList=new ArrayList<>();
+                        
                         if(ruleString[1] != null)
                         {
+                            System.out.println(ruleString[1].trim());
                             String variabel = ruleString[1].trim();
-                            rule.generateVariable(variabel);
+                            String[] variabelString = variabel.split("&");
+                            
+                            for (String variabelString1 : variabelString) {
+                                System.out.println(variabelString1);
+                                Rule rule = new Rule();
+                                rule.generateVariable(variabelString1);
+                                ruleList.add(rule);
+                            }
+                            
+                            
                         }
                         if(ruleString[2] != null)
                         {
                             String operator = ruleString[2].trim();
-                            rule.generateOperator(operator);
+                            
+                            
+                            for (Rule ruleList1 : ruleList)
+                                ruleList1.generateOperator(operator);
                         }
                         if(ruleString[3] != null)
                         {
@@ -116,16 +131,23 @@ public class RuleReader {
                                 logIndex++;
                             }
                             nilai = nilai.trim();
-                            rule.generateNilai(nilai);
+                            
+                            for (Rule ruleList1 : ruleList)
+                                ruleList1.generateNilai(nilai);
                         }
                         if(ruleString[logIndex] != null)
                         {
                             String log = ruleString[logIndex].trim();
                             System.out.println("masuk hahaha "+log);
-                            rule.generateLog(log);
+                            
+                            for (Rule ruleList1 : ruleList)
+                                ruleList1.generateLog(log);
                             
                         }
-                        retVal.add(rule);
+                        for (Rule ruleList1 : ruleList) {
+                            retVal.add(ruleList1);
+                        }
+
                     }
                     
                 }

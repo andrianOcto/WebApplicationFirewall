@@ -95,6 +95,9 @@ private static Logger myLogger = Logger.getLogger("Class");
                     System.out.println("masuk");
                     System.out.println(ClassTemp);
                     int methodCount = 0;
+                    
+                  
+                    
                     for (Rule rule : listRule) {
                     CtMethod m2 = CtNewMethod.make(
                     "public boolean WAFMethod"+methodCount+"(javax.servlet.ServletRequest req1, javax.servlet.ServletResponse resp1) {boolean retVal = false;"
@@ -743,41 +746,97 @@ private static Logger myLogger = Logger.getLogger("Class");
                             
                             + "return retVal;"
                             + "}",cl);
+                    
                     cl.addMethod(m2);
                     methodCount++;
                     }
+                    
+                    String append = "";
+                    int whiteListCount=0;
+                    for(String value : Configuration.whiteList)
+                    {
+                        if(whiteListCount==0)
+                        {
+                        append+= "if(value.startsWith(\""+value+"\")){"
+                            + "cek=false;System.out.println(\"ini adalah test\");}";
+                        }
+                        else 
+                        {
+                            append+= "else if(value.startsWith(\""+value+"\")){"
+                            + "cek=false;}";
+                        }
+                        
+                        append += "else{cek=true;}";
+                    }
+                    
+                    CtMethod whiteList = CtNewMethod.make(
+                    "public boolean WAFWhiteList(javax.servlet.ServletRequest req1, javax.servlet.ServletResponse resp1, String whiteListParam) {boolean retVal = false;"
+                            + "javax.servlet.http.HttpServletResponse resp = (javax.servlet.http.HttpServletResponse) resp1;"
+                            + "javax.servlet.http.HttpServletRequest req = (javax.servlet.http.HttpServletRequest) req1;"
+                            + "String method = \"all\";"
+                            + "String variable = \"-----\";"
+
+                            // Setting Log
+                            + "boolean isLog = false;"
+                            + "boolean isBlock = false;"
+                            + "boolean confEngine = "+Configuration.logEnable+";" 
+                            + "java.util.logging.Logger myLogger = java.util.logging.Logger.getLogger(\"WAF Tugas Akhir\");"
+                            //ARGS cek all parameter terlebih dahulu
+                            + "if(method.equals(\"all\")){"
+                            + "String param = whiteListParam; "
+                            + "boolean cek = false;"
+                            + "String matcher = \"@beginwith\";"
+                            
+                            //cek untuk parameter tertentu
+                            + ""
+                            + "String value = req1.getParameter(whiteListParam);System.out.println(param);"
+
+                            + "String messageString=\"Unvalidated Redirect and Forward\";"
+                            + "String fullURI=req.getRequestURL().toString();"
+                            + "if(req.getQueryString()!=null){"
+                            
+                            + "if(value != null){"
+                            + "if(matcher.equals(\"@beginwith\")){"
+                            + append
+                            + "}"
+                          
+                            + "}"
+                            + "retVal=cek;"
+                            + "}}"
+                            
+                            + "return retVal;"
+                            + "}",cl);
+                    cl.addMethod(whiteList);
                     CtMethod[] methods =cl.getMethods();
                     
                         for (CtMethod method : methods) {
                             if(method.getName().equals("doFilter"))
                             {
                             try{
+                                method.addLocalVariable("elapsedTime", CtClass.longType);
+                                method.insertBefore("elapsedTime = System.currentTimeMillis();");
+                                method.insertAfter("elapsedTime = System.currentTimeMillis() - elapsedTime;System.out.println(\"Method Executed in ms: \" + elapsedTime);");
                                 int i =0;
+                                for(String param : Configuration.whiteListParam)
+                                {
+                                        System.out.println("test masuk2");
+                                        
+                                        method.insertBefore("javax.servlet.http.HttpServletResponse resp = (javax.servlet.http.HttpServletResponse) $2;"
+                                                            +"if(WAFWhiteList($1,$2,\""+param+"\")){resp.sendError(403); return;};" );
+                                    
+                                }
                                 for (Rule rule : listRule) {
                                    
-                                   String appender = "";
-                                   if(rule.getMethod().equals("all") && rule.getVariable().equals("all"))
-                                   {
-                                       appender = "java.util.Enumeration enumeration = $1.getParameterNames();"
-                                                      + "while (enumeration.hasMoreElements()) {"
-                                                      + "String parameterName = (String) enumeration.nextElement();"
-                                                      + "String value = $1.getParameter(parameterName);"
-                                                      + "String messageString=\""+rule.getMessage()+"\";"
-                                                      + "String fullURI=req.getRequestURL().toString();"
-                                                      + "if(req.getQueryString()!=null){"
-                                                      + "fullURI=fullURI+\"?\"+req.getQueryString();}"
-                                                      + "String messageString = messageString.replace(\"%request_uri\",fullURI);"
-                                                      + "messageString = messageString.replace(\"%treat\",value);";
-                                       appender       +="}";
-                                   }
                                    
-                                   method.insertBefore("javax.servlet.http.HttpServletResponse resp = (javax.servlet.http.HttpServletResponse) $2;"
-                                                      +"if(WAFMethod"+i+"($1,$2)){resp.sendError("+rule.getErrorCode()+"); return;};" );
+                                   
+                                   //method.insertBefore("javax.servlet.http.HttpServletResponse resp = (javax.servlet.http.HttpServletResponse) $2;"
+                                   //                   +"if(WAFMethod"+i+"($1,$2)){resp.sendError("+rule.getErrorCode()+"); return;};" );
                                    
                                    // method.insertAt(51, "CharResponseWrapper pp = new CharResponseWrapper((javax.servlet.http.HttpServletResponse) $2);");
                                    i++;
                                 }
-   
+                                
+                                
                             }
                             catch(Exception p)
                             {

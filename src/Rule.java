@@ -36,7 +36,6 @@ public class Rule {
     {
         if(text.startsWith("ARGS:"))
         {
-            
             String[] parseString = text.split(":");
             if(parseString.length > 1)
             {

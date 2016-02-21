@@ -13,20 +13,18 @@ import java.util.ArrayList;
  */
 public final class Configuration {
     public static boolean logEnable;
+    public static boolean enableWAF;
 
-    public static ArrayList<String> blackList;
+    public static ArrayList<String> whiteListParam;
     public static ArrayList<String> whiteList;
     public static ArrayList<String> confList;
 
     public Configuration() {
-        blackList = new ArrayList<>();
-        whiteList = new ArrayList<>();
-        confList  = new ArrayList<>();
+        whiteListParam  = new ArrayList<>();
+        whiteList       = new ArrayList<>();
+        confList        = new ArrayList<>();
         
-        //inisialisasi daftar konfigurasi
-        confList.add("SecAuditEngine");
-        confList.add("SecBlackList");
-        confList.add("SecWhiteList");
+        enableWAF = true;
     }
     
 }
